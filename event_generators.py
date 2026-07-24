@@ -4,9 +4,9 @@ import models
 import socket
 
 # login attempt simulator
-def simulate_login_attempts(source_ip, user, num_failures, reason, then_success=True):
+def simulate_login_attempts(source_ip, user, num_failures, then_success=True):
     for i in range(num_failures):
-        models.insert_event(source_ip, "LOGIN_FAILED", user, None, reason)
+        models.insert_event(source_ip, "LOGIN_FAILED", user, None, "invalid_password")
         time.sleep(3)
     if then_success:
         models.insert_event(source_ip, "LOGIN_SUCCESS", user, None, "correct_password")
@@ -33,4 +33,7 @@ def simulate_port_scan(source_ip):
 """
 add in readme
 why using none for target and user
+
+tell that u r using only invalid password and port closed reason not being specified - 
+like if its not listening or not responding
 """
