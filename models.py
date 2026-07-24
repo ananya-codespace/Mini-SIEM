@@ -86,7 +86,14 @@ def is_suppressed(source_ip, rule_name):
         return False
     return True
 
-
-
+# repeat offender bonus to calculate score
+def count_previous_alerts(source_ip):
+    con = sqlite3.connect("siem.db")
+    cur = con.cursor()
+    cur.execute("SELECT COUNT(*) FROM alerts WHERE source_ip = ?", (source_ip, ))
+    row = cur.fetchone()
+    con.close()
+    # for each alert a bonus value of 5 is added
+    return row[0] * 5  # as fetchone() returns a tuple
 
 # in readme, about limit and desc
