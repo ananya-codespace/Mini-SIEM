@@ -24,7 +24,8 @@ def detect_brute_force():
     for (ip, count, related_event_ids) in rows:
         if count >= 10:
             if not models.is_suppressed(ip, rule_name):
-                score, severity = calculate_score(rule_name, count, 10)
+                # calculating score before adding alert - it counts alerts before this one, i.e, the alerts already in the table
+                score, severity = calculate_score(rule_name, count, 10, ip)
                 models.insert_alert(ip, rule_name, score, severity, related_event_ids)
                 print(f"[{severity}] {rule_name} - {ip} made {count} failed login attempts in the last 60 seconds (score: {score})")
             else:
@@ -50,14 +51,14 @@ def detect_port_scan():
     for (ip, count, related_event_ids) in rows:
         if count >= 15: 
             if not models.is_suppressed(ip, rule_name):
-                score, severity = calculate_score(rule_name, count, 15)
+                score, severity = calculate_score(rule_name, count, 15, ip)
                 models.insert_alert(ip, rule_name, score, severity, related_event_ids)
                 print(f"[{severity}] {rule_name} - {ip} touched {count} disinct ports in the last 60 seconds (score: {score})")
             else:
                 print(f"Suppressed ip -{ip} matched a known suppression rule")
 
 # calculating scores for alerts to determine the severity
-def calculate_score(rule_name, count, threshold):
+def calculate_score(rule_name, count, threshold, source_ip):
     # port scanning is slightly less severe on its own than an actual login attack
     if rule_name == "BRUTE_FORCE_DETECTED":
          base_score = 30
@@ -65,7 +66,8 @@ def calculate_score(rule_name, count, threshold):
         base_score = 20
     # different scores for 12 failures and 50 failures
     extra = count - threshold
-    score = base_score + extra
+    offender_count = models.count_previous_alerts(source_ip)
+    score = base_score + extra + offender_count
     if score <= 30:
         severity = "Low"
     elif score > 30 and score <= 60:
