@@ -29,7 +29,7 @@ def detect_tamper():
         recomputed_hash = hashing.compute_hash(event_data, expected_prev_hash)
         # if a log has been deleted, an alert is raised and we stop checking if more logs were deleted as log's integrity has been compromised 
         if recomputed_hash != stored_curr_hash:
-            print("Alert - tampering detected starting at event:", event_id, "with source ip:", source_ip)
+            print(f"[Critical] LOG_TAMPERING_DETECTED - chain broken starting at event {event_id} (source_ip: {source_ip})")
             # if log deleted, added into the alerts table
             models.insert_alert(source_ip, "LOG_TAMPERING_DETECTED", 100, "Critical")
             break
