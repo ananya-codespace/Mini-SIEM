@@ -58,12 +58,12 @@ con.close()
 10. Add tamper detection → 
     periodic check that walks the hash chain and confirms nothing broke ✅
 
-11. Check readme
+11. Check readme and also clarify the basis on which the files are divided
 
 
 Fixes
 1. related_event_ids in insert_alert() — still None ✅
-2. Login simulator realism (varied reasons / username-guessing scenario)
-3. Additional scoring factors (sensitive ports, repeat offenders)
-4. Port scan "closed vs nothing listening" — agreed to leave as-is permanently
+2. Login simulator realism (varied reasons / username-guessing scenario) ✅
+3. Additional scoring factors (sensitive ports, repeat offenders) ✅
+4. Port scan "closed vs nothing listening" — agreed to leave as-is permanently ✅
 """
