@@ -47,10 +47,9 @@ def insert_event(source_ip, event_type, user, target, detail):
     con.close()
 
 # inserting alerts into the db
-def insert_alert(source_ip, rule_name, score, severity):
+def insert_alert(source_ip, rule_name, score, severity, related_event_ids):
     alert_id = str(uuid.uuid4())
     triggered_at = str(datetime.datetime.now())
-    related_event_ids = None
     status = "OPEN"
 
     con = sqlite3.connect("siem.db")
