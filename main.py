@@ -47,23 +47,22 @@ con.close()
 6. Write the correlation/rule engine →
      - brute-force detection rule (X failed logins in Y seconds)
      - port scan detection rule (X distinct ports in Y seconds) ✅
-
 7. Create alerts table + insert logic → 
    when a rule fires, write a row into alerts ✅
-
 8. Create suppressions table + logic → 
    check suppressions before creating an alert (or after, lowering score — 
    your open design decision from earlier) ✅
 9. Add risk scoring → 
    compute a score when an alert is created, using the weighted factors 
    we discussed (base score + port count + sensitive ports + repeat offender) ✅
-
 10. Add tamper detection → 
     periodic check that walks the hash chain and confirms nothing broke ✅
 
+11. Check readme
+
 
 Fixes
-1. related_event_ids in insert_alert() — still None
+1. related_event_ids in insert_alert() — still None ✅
 2. Login simulator realism (varied reasons / username-guessing scenario)
 3. Additional scoring factors (sensitive ports, repeat offenders)
 4. Port scan "closed vs nothing listening" — agreed to leave as-is permanently
