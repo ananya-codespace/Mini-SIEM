@@ -10,7 +10,6 @@ def simulate_login_attempts(source_ip, user, num_failures, then_success=True):
         time.sleep(3)
     if then_success:
         models.insert_event(source_ip, "LOGIN_SUCCESS", user, None, "correct_password")
-# refine it later
 
 # port scan simulator
 def simulate_port_scan(source_ip):

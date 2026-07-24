@@ -58,8 +58,7 @@ def insert_alert(source_ip, rule_name, score, severity, related_event_ids):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", (alert_id, triggered_at, source_ip, rule_name, related_event_ids, status, score, severity))
     con.commit()
     con.close()
-# changeeeeeeeeeeeeee
-
+    
 # inserting suppressions into the db
 def insert_suppression(source_ip, rule_name, reason, expires_at):
     suppression_id = str(uuid.uuid4())
