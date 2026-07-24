@@ -96,4 +96,17 @@ def count_previous_alerts(source_ip):
     # for each alert a bonus value of 5 is added
     return row[0] * 5  # as fetchone() returns a tuple
 
+# to check if sensitive ports touched
+# sensitive ports: 22 - SSH, 3389 - RDP, 3306 - MySQL
+def count_sensitive_ports(source_ip, cutoff):
+    con = sqlite3.connect("siem.db")
+    cur = con.cursor()
+    cur.execute("""SELECT COUNT (DISTINCT target) FROM events
+                WHERE source_ip = ? AND event_type = 'PORT_SCAN_ATTEMPT'
+                AND target IN (?, ?, ?) AND timestamp > ?""", (source_ip, "22", "3389", "3306", cutoff))
+    row = cur.fetchone()
+    con.close()
+    # for touching each sensitive port, a bonus of 10 is added
+    return row[0] * 10 
+
 # in readme, about limit and desc
