@@ -1,4 +1,4 @@
-# DB connection + table creation 
+  # DB connection + table creation 
 import sqlite3
 
 # initializing the events table
