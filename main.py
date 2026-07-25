@@ -1,30 +1,76 @@
 # entry point to test things as we build
 import sqlite3
 import database
-import models
+import rules
+import integrity
+import event_generators
 
-# for testing 
+print(" -------------------- MINI SIEM -------------------- ")
+print("\nWELCOME!")
+
+# initializing all 3 tables
+print(" -------------------- ")
+print("Initializing Tables .....")
 database.init_events()
-models.insert_event("192.168.1.45", "LOGIN_FAILED", "admin", None, "invalid_password")
-models.insert_event("192.168.1.41", "PORT_SCAN_ATTEMPT", None, "22", "port_scan_failed")
-models.insert_event("192.168.1.45", "LOGIN_SUCCESS", "admin", None, "correct_password")
+database.init_alerts()
+database.init_suppressions()
+print(" -------------------- ")
 
+# generating logs (test activities)
+print(" -------------------- ")
+print("Generating Test Events .....")
+event_generators.simulate_login_attempts("192.168.1.45", "admin", 15, True)
+event_generators.simulate_login_attempts("192.168.1.45", "admin", 5, False)
+event_generators.simulate_port_scan("192.168.5.24")
+print(" -------------------- ")
+
+# detecting suspicious activities
+print(" -------------------- ")
+print("Running Detection Rules .....")
+rules.detect_brute_force()
+rules.detect_port_scan()
+print(" -------------------- ")
+
+# tamper checking - no log deleted
+print(" -------------------- ")
+print("Checking Log Integrity .....")
+chain_ok = integrity.detect_tamper()
+if chain_ok:
+   print("No tampering detected - chain intact")
+print(" -------------------- ")
+
+# tamper checking - log deleted
+# print(" -------------------- ")
+# print("Checking Log Integrity .....")
+# con = sqlite3.connect("siem.db")
+# cur = con.cursor()
+# delete or update will lead to tampering
+# cur.execute("DELETE FROM events WHERE rowid = 5")  
+# updating (eg: event detail/ source ip) will cause event_data value to change due to which the chain breaks
+# con.commit()
+# con.close()
+# chain_ok = integrity.detect_tamper()
+# if chain_ok:
+#    print("No tampering detected - chain intact")
+# print(" -------------------- ")
+
+# printing the alerts from the alerts table
+print(" -------------------- ")
+print("Alerts Table .....")
 con = sqlite3.connect("siem.db")
 cur = con.cursor()
-cur.execute("SELECT * FROM events")
+cur.execute("SELECT source_ip, rule_name, status, score, severity FROM alerts")
 rows = cur.fetchall()
 for row in rows:
    print(row)
 con.close()
+print(" -------------------- ")
 
 
 
 
 
-
-
-
-
+# in readme - mention that the main file is hardcoded and we r not taking any input
 
 
 
