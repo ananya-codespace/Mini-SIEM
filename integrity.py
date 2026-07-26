@@ -31,7 +31,7 @@ def detect_tamper():
         if recomputed_hash != stored_curr_hash:
             print(f"[Critical] LOG_TAMPERING_DETECTED - chain broken starting at event {event_id} (source_ip: {source_ip})")
             # if log deleted, added into the alerts table
-            models.insert_alert(source_ip, "LOG_TAMPERING_DETECTED", 100, "Critical")
+            models.insert_alert(source_ip, "LOG_TAMPERING_DETECTED", 100, "Critical", None)
             return False  # chain broken
         expected_prev_hash = recomputed_hash
     return True  # walked entire chain, nothing broken
