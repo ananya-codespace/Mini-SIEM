@@ -29,7 +29,7 @@ def detect_brute_force():
                 models.insert_alert(ip, rule_name, score, severity, related_event_ids)
                 print(f"[{severity}] {rule_name} - {ip} made {count} failed login attempts in the last 60 seconds (score: {score})")
             else:
-                print(f"Suppressed ip -{ip} matched a known suppression rule")
+                print(f"Suppressed ip - {ip} matched a known suppression rule")
 # related_event_ids would be used in SIEM such that you can click on a specific alert and see exactly which raw events caused it - not 
 
 # port scan detection rule 
@@ -55,7 +55,7 @@ def detect_port_scan():
                 models.insert_alert(ip, rule_name, score, severity, related_event_ids)
                 print(f"[{severity}] {rule_name} - {ip} touched {count} disinct ports in the last 60 seconds (score: {score})")
             else:
-                print(f"Suppressed ip -{ip} matched a known suppression rule")
+                print(f"Suppressed ip - {ip} matched a known suppression rule")
 
 # calculating scores for alerts to determine the severity
 def calculate_score(rule_name, count, threshold, source_ip, cutoff):
