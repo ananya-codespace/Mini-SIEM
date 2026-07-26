@@ -7,7 +7,8 @@ import socket
 def simulate_login_attempts(source_ip, user, num_failures, then_success=True):
     for i in range(num_failures):
         models.insert_event(source_ip, "LOGIN_FAILED", user, None, "invalid_password")
-        time.sleep(3)
+        # generating logs after some interval 
+        time.sleep(0.5)
     if then_success:
         models.insert_event(source_ip, "LOGIN_SUCCESS", user, None, "correct_password")
 
@@ -19,6 +20,7 @@ def simulate_port_scan(source_ip):
     for port in ports_to_scan:
         # creating socket object
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.5)  # give up after half a second instead of waiting indefinitely
         res = sock.connect_ex(("127.0.0.1", port))  # connect_ex takes tuple as argument
         # res == 0 means open, nonzero means closed
         if res == 0:
