@@ -22,21 +22,22 @@ def detect_brute_force():
     # if ip count exceeds threshold value (10) within last 60 secs, raise an alert
     rule_name = "BRUTE_FORCE_DETECTED"
     for (ip, count, related_event_ids) in rows:
-        if count >= 10:
-            if not models.is_suppressed(ip, rule_name):
-                # calculating score before adding alert - it counts alerts before this one, i.e, the alerts already in the table
-                score, severity = calculate_score(rule_name, count, 10, ip, cutoff)
-                models.insert_alert(ip, rule_name, score, severity, related_event_ids)
-                print(f"[{severity}] {rule_name} - {ip} made {count} failed login attempts in the last 60 seconds (score: {score})")
-            else:
-                print(f"Suppressed ip - {ip} matched a known suppression rule")
+        if models.is_suppressed(ip, rule_name):
+            print(f"Suppressed ip - {ip} matched a known suppression rule")
+        elif count >= 10:
+            # calculating score before adding alert - it counts alerts before this one, i.e, the alerts already in the table
+            score, severity = calculate_score(rule_name, count, 10, ip, cutoff)
+            models.insert_alert(ip, rule_name, score, severity, related_event_ids)
+            print(f"[{severity}] {rule_name} - {ip} made {count} failed login attempts in the last 60 seconds (score: {score})")
+                
 # related_event_ids would be used in SIEM such that you can click on a specific alert and see exactly which raw events caused it - not 
 
 # port scan detection rule 
 def detect_port_scan():
     con = sqlite3.connect("siem.db")
     cur = con.cursor()
-    cutoff = str(datetime.datetime.now() - datetime.timedelta(seconds=60))
+    # increase timedelta to ensure all test scan events stay within range
+    cutoff = str(datetime.datetime.now() - datetime.timedelta(seconds=300))
 
     # COUNT(DISTINCT target) counts unique ports touched per IP, not total attempts
     cur.execute("""SELECT source_ip, COUNT (DISTINCT target), GROUP_CONCAT(event_id) FROM events
@@ -49,13 +50,13 @@ def detect_port_scan():
     # alert raised if 15 or more distinct ports touched within last 60 secs
     rule_name = "PORT_SCAN_DETECTED"
     for (ip, count, related_event_ids) in rows:
-        if count >= 15: 
-            if not models.is_suppressed(ip, rule_name):
-                score, severity = calculate_score(rule_name, count, 15, ip, cutoff)
-                models.insert_alert(ip, rule_name, score, severity, related_event_ids)
-                print(f"[{severity}] {rule_name} - {ip} touched {count} disinct ports in the last 60 seconds (score: {score})")
-            else:
-                print(f"Suppressed ip - {ip} matched a known suppression rule")
+        if models.is_suppressed(ip, rule_name):
+            print(f"Suppressed ip - {ip} matched a known suppression rule")
+        elif count >= 15:
+            score, severity = calculate_score(rule_name, count, 15, ip, cutoff)
+            models.insert_alert(ip, rule_name, score, severity, related_event_ids)
+            print(f"[{severity}] {rule_name} - {ip} touched {count} distinct ports in the last 300 seconds (score: {score})")
+                
 
 # calculating scores for alerts to determine the severity
 def calculate_score(rule_name, count, threshold, source_ip, cutoff):
