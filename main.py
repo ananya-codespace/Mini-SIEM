@@ -23,7 +23,11 @@ print("\n -------------------- ")
 print("Generating Login Test Events .....")
 event_generators.simulate_login_attempts("192.168.1.45", "admin", 15, True)
 event_generators.simulate_login_attempts("192.168.1.45", "admin", 5, False)
+event_generators.simulate_login_attempts("192.168.1.50", "admin", 15, True)
 print(" -------------------- ")
+
+# adding a suppression for one of the scanned IPs
+models.insert_suppression("192.168.1.50", "BRUTE_FORCE_DETECTED", "known test account, expected failures", None)
 
 print("\n -------------------- ")
 print("Running Brute-Force Detection .....")
@@ -37,7 +41,7 @@ event_generators.simulate_port_scan("192.168.5.24")
 event_generators.simulate_port_scan("192.168.7.36")
 print(" -------------------- ")
 
-# adding a suppression for one of the scanned IPs
+# adding a suppression
 models.insert_suppression("192.168.5.24", "PORT_SCAN_DETECTED", "known test scanner", None)
 
 print("\n -------------------- ")
