@@ -20,7 +20,7 @@ def simulate_port_scan(source_ip):
     for port in ports_to_scan:
         # creating socket object
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(0.5)  # give up after half a second instead of waiting indefinitely
+        sock.settimeout(0.01)  # give up after fraction of second instead of waiting indefinitely
         res = sock.connect_ex(("127.0.0.1", port))  # connect_ex takes tuple as argument
         # res == 0 means open, nonzero means closed
         if res == 0:
