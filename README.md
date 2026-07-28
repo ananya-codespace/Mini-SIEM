@@ -74,5 +74,5 @@ python main.py
   - By deleting the log - the `prev_hash` value of the log after the deleted log will change
   - By updating the content of the event - the `event_data` value will change  
 
-In both the cases, `prev_hash` will differ from `curr_hash` due to which the chain breaks
+  In both the cases, `prev_hash` will differ from `curr_hash` due to which the chain breaks
 - Structuring a multi-file project with one clear responsibility per file
