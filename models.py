@@ -107,5 +107,3 @@ def count_sensitive_ports(source_ip, cutoff):
     con.close()
     # for touching each sensitive port, a bonus of 10 is added
     return row[0] * 10 
-
-# in readme, about limit and desc

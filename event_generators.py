@@ -30,11 +30,3 @@ def simulate_port_scan(source_ip):
         models.insert_event(source_ip, "PORT_SCAN_ATTEMPT", None, str(port), reason)
         sock.close()
 
-
-"""
-add in readme
-why using none for target and user
-
-tell that u r using only invalid password and port closed reason not being specified - 
-like if its not listening or not responding
-"""

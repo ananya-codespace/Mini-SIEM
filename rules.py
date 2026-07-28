@@ -82,10 +82,3 @@ def calculate_score(rule_name, count, threshold, source_ip, cutoff):
         severity = "Critical"
     return score, severity
 
-
-
-
-# in readme, write about deltatime, group by and all that 
-
-
-# in readme - group_concat, stored but not used, will not be using it, but used in real siem 

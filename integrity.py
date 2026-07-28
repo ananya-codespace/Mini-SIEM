@@ -15,7 +15,7 @@ def detect_tamper():
     for row in rows:
         # unpacking direction is backwards
         event_id, timestamp, source_ip, event_type, user, target, detail, prev_hash, stored_curr_hash = row
-        # row already holds the fetched tuple
+        # row holds the values as a tuple, and these values are put into ecevt_id, timestamp, and so on in proper order (i.e., item-1 = event_id, item-2 = timestamp ...)
         event_data = {
             "event_id": event_id,
             "timestamp": timestamp,
@@ -36,5 +36,3 @@ def detect_tamper():
         expected_prev_hash = recomputed_hash
     return True  # walked entire chain, nothing broken
 
-
-# in readme - about unpacking

@@ -10,10 +10,7 @@ def compute_hash(event_data, prev_hash):
     return curr_hash
 
 
-
-
 """
-add in readme
 * pbkdf2_hmac is designed for password hashing — its whole purpose is to be slow (that 100,000 iterations you used in PyVault) so that if an attacker steals your password 
 hashes, brute-forcing them takes forever. That's exactly right for passwords.
 * But here, you're not hashing a secret to protect it from brute-forcing — you're creating a fingerprint to detect tampering. You want this to be fast, because you'll be 
